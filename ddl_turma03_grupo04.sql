@@ -62,5 +62,3 @@ CREATE TABLE Dependente(
     PRIMARY KEY(cpf_dependente, cpf_cliente),
     FOREIGN KEY(cpf_cliente) REFERENCES Cliente(cpf) ON DELETE CASCADE
 );
-
-
