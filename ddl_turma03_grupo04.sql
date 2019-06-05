@@ -1,7 +1,7 @@
 CREATE TABLE Cliente(
-    cpf CHAR(11) NOT NULL PRIMARY KEY,
+    cpf CHAR(11) PRIMARY KEY,
     email VARCHAR(100),
-    endereco VARCHER(100),
+    endereco VARCHAR(100),
     data_nascimento DATE,
     sexo CHAR(1),
     nome VARCHAR(50) NOT NULL
@@ -15,45 +15,52 @@ CREATE TABLE Telefone(
 );
 
 CREATE TABLE Avaliacao(
-    id NUMBER NOT NULL PRIMARY KEY,
-    nota CHAR(3),
+    id NUMBER PRIMARY KEY,
+    cpf_cliente CHAR(11) UNIQUE,
+    nota INT,
     data DATE,
-    comentario VARCHAR(500)
+    comentario VARCHAR(500),
+    FOREIGN KEY(cpf_cliente) REFERENCES Cliente(cpf) ON DELETE CASCADE,
+    CHECK (nota between 0 and 100)
 );
 
 CREATE TABLE Funcionario(
-    cpf CHAR(11) NOT NULL PRIMARY KEY,
+    cpf CHAR(11) PRIMARY KEY,
     data_nascimento DATE,
     nome VARCHAR(50) NOT NULL,
-    salario NUMBER(9,2),
+    salario NUMBER,
     funcao VARCHAR(50)
 );
 
 CREATE TABLE Quarto(
-    numero NUMBER NOT NULL PRIMARY KEY, 
-    valor_diaria NUMERIC(9,2),
+    numero INT PRIMARY KEY, 
+    valor_diaria NUMBER,
     tipo VARCHAR(20),
     vista VARCHAR(20)
 );
 
 CREATE TABLE Equipamento(
-    numero_quarto NUMBER,
+    numero_quarto INT,
     equipamento VARCHAR(20),
     PRIMARY KEY(numero_quarto, equipamento),
-    FOREIGN KEY(numero_quarto) REFERENCES Quarto(numero) ON DELETE CASCADE
+    FOREIGN KEY(numero_quarto) REFERENCES Quarto(numero) ON DELETE SET NULL
 );
 
 CREATE TABLE Produto(
-    id NUMBER NOT NULL PRIMARY KEY,
-    tipo VARCHAR(50),
+    id INT PRIMARY KEY,
+    tipo VARCHAR(50) NOT NULL,
     nome VARCHAR(50) NOT NULL,
-    valor NUMBER(9,2) NOT NULL,
+    valor NUMBER NOT NULL,
     descricao VARCHAR(200)
 );
 
 CREATE TABLE Dependente(
-    cpf CHAR(11) NOT NULL PRIMARY KEY,
-    data_nascimento DATE,
+    cpf_dependente CHAR(11),
+    cpf_cliente CHAR(11),
+    data_nascimento DATE NOT NULL,
     nome VARCHAR(50) NOT NULL,
-    FOREIGN KEY(cpf_dependente) REFERENCES Dependente(cpf) ON DELETE CASCADE
+    PRIMARY KEY(cpf_dependente, cpf_cliente),
+    FOREIGN KEY(cpf_cliente) REFERENCES Cliente(cpf) ON DELETE CASCADE
 );
+
+
