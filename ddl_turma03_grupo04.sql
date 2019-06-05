@@ -1,7 +1,7 @@
 CREATE TABLE Cliente(
     cpf CHAR(11) NOT NULL PRIMARY KEY,
     email VARCHAR(100),
-    endereco VARCHER(100),
+    endereco VARCHAR(100),
     data_nascimento DATE,
     sexo CHAR(1),
     nome VARCHAR(50) NOT NULL
@@ -53,7 +53,8 @@ CREATE TABLE Produto(
 
 CREATE TABLE Dependente(
     cpf CHAR(11) NOT NULL PRIMARY KEY,
+    cpf_cli CHAR(11),
     data_nascimento DATE,
     nome VARCHAR(50) NOT NULL,
-    FOREIGN KEY(cpf_dependente) REFERENCES Dependente(cpf) ON DELETE CASCADE
+    FOREIGN KEY(cpf_cli) REFERENCES Cliente(cpf) ON DELETE CASCADE
 );
