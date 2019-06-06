@@ -62,3 +62,44 @@ CREATE TABLE Dependente(
     PRIMARY KEY(cpf_dependente, cpf_cliente),
     FOREIGN KEY(cpf_cliente) REFERENCES Cliente(cpf) ON DELETE CASCADE
 );
+
+CREATE TABLE Quarto_Vende_Produto(
+    numero_quarto INT,
+    id_produto INT,
+    data DATE NOT NULL,
+    quantidade INT,
+    PRIMARY KEY(numero_quarto, id_produto),
+    FOREIGN KEY(numero_quarto) REFERENCES Quarto(numero) ON DELETE CASCADE, 
+    FOREIGN KEY(id_produto) REFERENCES Produto(id) ON DELETE CASCADE    
+);
+
+CREATE TABLE Funcionario_Mantem_Quarto(
+    cpf_funcionario CHAR(11), 
+    numero_quarto INT,
+    data DATE NOT NULL,
+    tipo CHAR(20),
+    observacao CHAR(100),
+    PRIMARY KEY(cpf_funcionario, numero_quarto),
+    FOREIGN KEY(cpf_funcionario) REFERENCES Funcionario(cpf) ON DELETE CASCADE, 
+    FOREIGN KEY(numero_quarto) REFERENCES Quarto(numero) ON DELETE CASCADE       
+);
+
+CREATE TABLE Cliente_Reserva_Quarto(
+    cpf_cliente CHAR(11),
+    numero_quarto INT,
+    dia_checkin DATE NOT NULL,
+    dia_checkout DATE NOT NULL,
+    PRIMARY KEY(cpf_cliente, numero_quarto),
+    FOREIGN KEY(cpf_cliente) REFERENCES Cliente(cpf) ON DELETE CASCADE, 
+    FOREIGN KEY(numero_quarto) REFERENCES Quarto(numero) ON DELETE CASCADE       
+);
+
+CREATE TABLE Quarto_Hospeda_Cliente(
+    numero_quarto INT,
+    cpf_cliente CHAR(11),
+    dia_checkin DATE NOT NULL,
+    dia_checkout DATE NOT NULL,
+    PRIMARY KEY(numero_quarto, cpf_cliente),
+    FOREIGN KEY(numero_quarto) REFERENCES Quarto(numero) ON DELETE CASCADE,
+    FOREIGN KEY(cpf_cliente) REFERENCES Cliente(cpf) ON DELETE CASCADE          
+);
