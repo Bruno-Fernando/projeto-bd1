@@ -30,6 +30,7 @@ CREATE TABLE Funcionario(
     nome VARCHAR(50) NOT NULL,
     salario NUMBER,
     funcao VARCHAR(50)
+    CHECK (salario >= 0)
 );
 
 CREATE TABLE Quarto(
