@@ -29,7 +29,7 @@ CREATE TABLE Funcionario(
     data_nascimento DATE,
     nome VARCHAR(50) NOT NULL,
     salario NUMBER,
-    funcao VARCHAR(50)
+    funcao VARCHAR(50),
     CHECK (salario >= 0)
 );
 
