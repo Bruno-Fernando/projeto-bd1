@@ -56,6 +56,8 @@ create or replace procedure atualizaPrecosProdutosByTipo(
      end;
    
    END;
+   
+-- para um desconto o numero deve ser negativo , para um aumento o numero deve ser possitivo , exemplo abaixo , desconto de 10 %
 
 begin 
  ATUALIZAPRECOSPRODUTOSBYTIPO('restaurante', -0.1);
