@@ -27,6 +27,14 @@ WHERE tipo IN ('bar', 'restaurante')
 AND valor BETWEEN 50 AND 100;
 
 
+-- Questao 04: Liste todos os funcionários com função de técnico, em ordem crescente pelo nome, e pelo salário.
+
+SELECT f.nome, f.salario 
+FROM FUNCIONARIO f 
+WHERE f.funcao = 'Técnico' 
+ORDER BY f.nome, f.salario;
+
+
 -- Questao 05: Qual a maior venda que um quarto realizou em dezembro de 2018?
 
 SELECT v.ID_VENDA
@@ -70,6 +78,13 @@ FROM EQUIPAMENTO
 WHERE equipamento LIKE "TV%";
 
 
+-- Questao 09: Quais clientes que possuem nenhum dependente associado?
+
+SELECT * 
+FROM CLIENTE c 
+WHERE NOT EXISTS(SELECT * FROM DEPENDENTE d WHERE d.cpf_cliente = c.cpf);
+
+
 -- Questao 10: Qual o cliente consumiu mais produtos do tipo lavadeira?
 
 -- Visao Auxiliar definida localmente com WITH: permite ter, em cada tupla, a informacao do cpf do cliente e a qnt. 
@@ -86,7 +101,6 @@ FROM auxiliar a
 WHERE a.qnt_lavadeira = (SELECT MAX(qnt_lavadeira)
                         FROM auxiliar)
 
-
 -- Questao 11: Para cada quarto, obter o numero do quarto, valor da diaria e o valor total de produtos vendidos por este mesmo quarto.
 
 SELECT q.numero, q.valor_diaria, SUM(v.quantidade * p.valor)
@@ -96,8 +110,8 @@ GROUP BY q.numero, q.valor_diaria
 
 -- Questao 12: Liste todos os quartos juntamente com os seus respectivos equipamentos associados.
 
-SELECT q.numero , e.equipamento FROM QUARTO q LEFT JOIN
-EQUIPAMENTO e ON e.numero_quarto = q.numero;
+SELECT q.numero , e.equipamento 
+FROM QUARTO q LEFT JOIN EQUIPAMENTO e ON e.numero_quarto = q.numero;
 
 
 -- Questao 13: Modifique a tabela FUNCIONARIO, adicionando uma restrição de integridade que valide se a 
@@ -106,6 +120,18 @@ EQUIPAMENTO e ON e.numero_quarto = q.numero;
 ALTER TABLE FUNCIONARIO
 ADD( CONSTRAINT formato_cpf
 CHECK( REGEXP_LIKE(cpf, '^([0-9]{3}).?([0-9]{3}).?([0-9]{3})-?([0-9]{2})$')));
+
+
+-- Questao 14: Faca um trigger que impeça que um produto seja inserido ou atualizado se seu valor ultrapassar R$ 500,00.
+
+CREATE OR REPLACE TRIGGER trCheckProduto 
+AFTER INSERT OR UPDATE ON Produto 
+FOR EACH ROW
+BEGIN
+    IF (:NEW.valor > 500.0) THEN
+       RAISE_APPLICATION_ERROR(-20000, 'Valor maior que 500,00');
+    END IF;
+END;
 
 
 -- Questao 15: Faça um trigger que so permite reserva de um quarto se ele for do tipo simples e
@@ -173,4 +199,18 @@ CREATE or replace procedure atualizaPrecosProdutosByTipo(
 begin 
  ATUALIZAPRECOSPRODUTOSBYTIPO('restaurante', -0.1);
 end;
-  
+
+
+-- Questao 17: Crie uma stored procedure chamada getQuartosVagos que deve listar todos os quartos que estão vagos no hotel 
+-- no momento de sua execução. Coloque no script também o código de como executar a procedure.
+
+create PROCEDURE getQuartosVagos(c1 OUT SYS_REFCURSOR)
+AS
+BEGIN
+ OPEN c1 FOR
+ select * from quarto q where not exists
+   (select * from hospeda h, reserva r where (h.numero_quarto = q.numero and TO_DATE('24/06/2019', 
+   'DD/MM/YYYY') between h.DIA_CHECK_IN and h.DIA_CHECK_OUT) or (r.numero_quarto = q.numero and 
+   TO_DATE('24/06/2019', 'DD/MM/YYYY') between r.DIA_CHECK_IN and r.DIA_CHECK_OUT));
+
+END c1;
