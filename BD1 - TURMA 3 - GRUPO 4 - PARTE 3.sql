@@ -1,12 +1,3 @@
--- GRUPO 4
-
--- Bruno Fernando
--- Leonardo Rodrigues
--- Lilian Honorio
--- Melissa Diniz
--- Pedro Guedes
-
-
 -- Questao 01: Liste o total de clientes em ordem crescente de idade.
 
 SELECT *                
